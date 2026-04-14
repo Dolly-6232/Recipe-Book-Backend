@@ -41,10 +41,15 @@ app.use((req, res, next) => {
 app.use("/api/auth", authRoutes)
 app.use("/api/recipes", recipeRoutes)
 
+// Health check route
+app.get("/", (req, res) => {
+    res.json({ status: "ok", message: "Server is running" })
+})
 
+const PORT = process.env.PORT || 5000
 
-app.listen(process.env.PORT, () => {
-
-    console.log("Server running")
-
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`)
+}).on('error', (err) => {
+    console.error("Server error:", err)
 })
