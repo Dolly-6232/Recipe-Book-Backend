@@ -5,9 +5,6 @@ import path from "path";
 import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import recipeRoutes from "./src/routes/recipeRoutes.js";
-console.log("Starting server...");
-console.log("Auth routes imported:", !!authRoutes);
-console.log("Recipe routes imported:", !!recipeRoutes);
 dotenv.config();
 const app = express();
 // Create uploads directory if it doesn't exist
