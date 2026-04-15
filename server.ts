@@ -16,8 +16,9 @@ const app = express()
 
 // Create uploads directory if it doesn't exist
 import fs from 'fs'
-if (!fs.existsSync('uploads')) {
-    fs.mkdirSync('uploads')
+const uploadDir = path.join(process.cwd(), 'uploads')
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true })
 }
 
 connectDB()
@@ -30,7 +31,7 @@ app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 
 // Serve uploaded files
-app.use('/uploads', express.static('uploads'))
+app.use('/uploads', express.static(uploadDir))
 
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.url}`)

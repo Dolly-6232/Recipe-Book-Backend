@@ -10,6 +10,6 @@ router.post("/signup", upload.single('profileImage'), (req, res, next) => {
 });
 router.post("/login", login);
 router.get("/profile", auth, getCurrentUser);
-router.patch("/update-profile", auth, updateProfile);
+router.patch("/update-profile", auth, upload.single('profileImage'), updateProfile);
 export default router;
 //# sourceMappingURL=authRoutes.js.map

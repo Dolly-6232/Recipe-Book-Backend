@@ -3,21 +3,13 @@ import User from "../models/User.js";
 import { generateToken } from "../utills/generateToken.js";
 export const signup = async (req, res) => {
     try {
-        let name, email, password, profileImage;
-        // Handle JSON body
-        if (req.body && typeof req.body === 'object') {
-            name = req.body.name;
-            email = req.body.email;
-            password = req.body.password;
-            profileImage = req.body.profileImage;
-        }
-        else {
-            return res.status(400).json({
-                error: "Invalid request format - expected JSON",
-                contentType: req.headers['content-type'],
-                help: "Make sure Content-Type is application/json and body is valid JSON"
-            });
-        }
+        console.log("=== SIGNUP REQUEST START ===");
+        console.log("Request body keys:", Object.keys(req.body));
+        console.log("Request file:", req.file);
+        console.log("Request body:", req.body);
+        const { name, email, password } = req.body;
+        const profileImage = req.file ? `/uploads/${req.file.filename}` : "";
+        console.log("Signup data received:", { name, email, profileImage: profileImage ? "present" : "missing", profileImagePath: profileImage });
         if (!name || !email || !password) {
             return res.status(400).json({
                 error: "Missing required fields"
@@ -27,7 +19,7 @@ export const signup = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
-                error: "E11000 duplicate key error collection: recipeapp.users index: email_1 dup key: { email: \"dolly@gmail.com\" }"
+                error: "User already exists"
             });
         }
         const hash = await bcrypt.hash(password, 10);
@@ -37,8 +29,10 @@ export const signup = async (req, res) => {
             password: hash,
             profileImage
         });
+        // Return user without password
+        const userWithoutPassword = await User.findById(user._id).select('-password');
         res.json({
-            user,
+            user: userWithoutPassword,
             token: generateToken(user._id.toString())
         });
     }
@@ -65,11 +59,13 @@ export const login = async (req, res) => {
 };
 export const getCurrentUser = async (req, res) => {
     try {
+        console.log("Getting user with ID:", req.user.id);
         // Fetch full user data from database
         const user = await User.findById(req.user.id).select('-password');
         if (!user) {
             return res.status(404).json({ error: "User not found" });
         }
+        console.log("Found user:", { name: user.name, email: user.email, hasProfileImage: !!user.profileImage });
         res.json(user);
     }
     catch (error) {
@@ -78,7 +74,28 @@ export const getCurrentUser = async (req, res) => {
     }
 };
 export const updateProfile = async (req, res) => {
-    const user = await User.findById(req.user._id);
-    res.json(user);
+    try {
+        const { name, email } = req.body;
+        const profileImage = req.file ? `/uploads/${req.file.filename}` : undefined;
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        // Update user fields
+        if (name)
+            user.name = name;
+        if (email)
+            user.email = email;
+        if (profileImage)
+            user.profileImage = profileImage;
+        await user.save();
+        // Return updated user without password
+        const updatedUser = await User.findById(req.user.id).select('-password');
+        res.json(updatedUser);
+    }
+    catch (error) {
+        console.error("Update profile error:", error);
+        res.status(500).json({ error: "Server error" });
+    }
 };
 //# sourceMappingURL=authController.js.map

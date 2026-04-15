@@ -4,10 +4,15 @@ import { generateToken } from "../utills/generateToken.js";
 
 export const signup = async (req: any, res: any) => {
     try {
+        console.log("=== SIGNUP REQUEST START ===")
+        console.log("Request body keys:", Object.keys(req.body))
+        console.log("Request file:", req.file)
+        console.log("Request body:", req.body)
+
         const { name, email, password } = req.body
         const profileImage = req.file ? `/uploads/${req.file.filename}` : ""
 
-        console.log("Signup data received:", { name, email, profileImage: profileImage ? "present" : "missing" });
+        console.log("Signup data received:", { name, email, profileImage: profileImage ? "present" : "missing", profileImagePath: profileImage });
 
         if (!name || !email || !password) {
             return res.status(400).json({
@@ -32,8 +37,11 @@ export const signup = async (req: any, res: any) => {
             profileImage
         })
 
+        // Return user without password
+        const userWithoutPassword = await User.findById(user._id).select('-password')
+
         res.json({
-            user,
+            user: userWithoutPassword,
             token: generateToken(user._id.toString())
         })
 
