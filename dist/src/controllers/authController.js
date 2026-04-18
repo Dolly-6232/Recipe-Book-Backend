@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
 import { generateToken } from "../utills/generateToken.js";
+import { uploadToCloudinary } from "../utills/cloudinaryUpload.js";
 export const signup = async (req, res) => {
     try {
         console.log("=== SIGNUP REQUEST START ===");
@@ -8,7 +9,11 @@ export const signup = async (req, res) => {
         console.log("Request file:", req.file);
         console.log("Request body:", req.body);
         const { name, email, password } = req.body;
-        const profileImage = req.file ? `/uploads/${req.file.filename}` : "";
+        let profileImage = "";
+        if (req.file) {
+            profileImage = await uploadToCloudinary(req.file, "profile-images");
+            console.log("Cloudinary upload successful:", profileImage);
+        }
         console.log("Signup data received:", { name, email, profileImage: profileImage ? "present" : "missing", profileImagePath: profileImage });
         if (!name || !email || !password) {
             return res.status(400).json({
@@ -76,7 +81,10 @@ export const getCurrentUser = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { name, email } = req.body;
-        const profileImage = req.file ? `/uploads/${req.file.filename}` : undefined;
+        let profileImage = undefined;
+        if (req.file) {
+            profileImage = await uploadToCloudinary(req.file, "profile-images");
+        }
         const user = await User.findById(req.user.id);
         if (!user) {
             return res.status(404).json({ error: "User not found" });

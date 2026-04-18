@@ -1,6 +1,7 @@
 import console from "console";
 import Recipe from "../models/Recipe.js";
 import User from "../models/User.js";
+import { uploadToCloudinary } from "../utills/cloudinaryUpload.js";
 export const createRecipe = async (req, res) => {
     try {
         console.log("Request body:", req.body);
@@ -11,8 +12,13 @@ export const createRecipe = async (req, res) => {
             console.log("No user found in request - auth middleware failed");
             return res.status(401).json({ error: "User not authenticated" });
         }
+        let imageUrl = null;
+        if (req.file) {
+            imageUrl = await uploadToCloudinary(req.file, "recipe-images");
+            console.log("Cloudinary upload successful:", imageUrl);
+        }
         const recipe = await Recipe.create({
-            image: req.file ? `/uploads/${req.file.filename}` : null,
+            image: imageUrl,
             title: req.body.title,
             ingredients: req.body.ingredients,
             instructions: req.body.instructions,

@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 declare const _default: mongoose.Model<{
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
 } & mongoose.DefaultTimestampProps, {}, {}, {
     id: string;
 }, mongoose.Document<unknown, {}, {
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
 } & mongoose.DefaultTimestampProps, {
     id: string;
@@ -19,9 +19,9 @@ declare const _default: mongoose.Model<{
     timestamps: true;
 }> & Omit<{
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
 } & mongoose.DefaultTimestampProps & {
     _id: mongoose.Types.ObjectId;
@@ -33,15 +33,15 @@ declare const _default: mongoose.Model<{
     timestamps: true;
 }, {
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
 } & mongoose.DefaultTimestampProps, mongoose.Document<unknown, {}, {
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
 } & mongoose.DefaultTimestampProps, {
     id: string;
@@ -49,9 +49,9 @@ declare const _default: mongoose.Model<{
     timestamps: true;
 }>> & Omit<{
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
 } & mongoose.DefaultTimestampProps & {
     _id: mongoose.Types.ObjectId;
@@ -64,9 +64,9 @@ declare const _default: mongoose.Model<{
 } | {
     [x: string]: mongoose.SchemaDefinitionProperty<any, any, mongoose.Document<unknown, {}, {
         ingredients: string[];
+        image?: string | null;
         title?: string | null;
         instructions?: string | null;
-        image?: string | null;
         createdBy?: mongoose.Types.ObjectId | null;
     } & mongoose.DefaultTimestampProps, {
         id: string;
@@ -74,9 +74,9 @@ declare const _default: mongoose.Model<{
         timestamps: true;
     }>> & Omit<{
         ingredients: string[];
+        image?: string | null;
         title?: string | null;
         instructions?: string | null;
-        image?: string | null;
         createdBy?: mongoose.Types.ObjectId | null;
     } & mongoose.DefaultTimestampProps & {
         _id: mongoose.Types.ObjectId;
@@ -87,9 +87,9 @@ declare const _default: mongoose.Model<{
     }> | undefined;
 }, {
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
     createdAt: NativeDate;
     updatedAt: NativeDate;
@@ -99,9 +99,9 @@ declare const _default: mongoose.Model<{
     __v: number;
 }>, {
     ingredients: string[];
+    image?: string | null;
     title?: string | null;
     instructions?: string | null;
-    image?: string | null;
     createdBy?: mongoose.Types.ObjectId | null;
     createdAt: NativeDate;
     updatedAt: NativeDate;

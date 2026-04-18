@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs"
 import User from "../models/User.js"
 import { generateToken } from "../utills/generateToken.js";
+import { uploadToCloudinary } from "../utills/cloudinaryUpload.js";
 
 export const signup = async (req: any, res: any) => {
     try {
@@ -10,7 +11,12 @@ export const signup = async (req: any, res: any) => {
         console.log("Request body:", req.body)
 
         const { name, email, password } = req.body
-        const profileImage = req.file ? `/uploads/${req.file.filename}` : ""
+        let profileImage = ""
+
+        if (req.file) {
+            profileImage = await uploadToCloudinary(req.file, "profile-images")
+            console.log("Cloudinary upload successful:", profileImage)
+        }
 
         console.log("Signup data received:", { name, email, profileImage: profileImage ? "present" : "missing", profileImagePath: profileImage });
 
@@ -90,7 +96,11 @@ export const getCurrentUser = async (req: any, res: any) => {
 export const updateProfile = async (req: any, res: any) => {
     try {
         const { name, email } = req.body
-        const profileImage = req.file ? `/uploads/${req.file.filename}` : undefined
+        let profileImage = undefined
+
+        if (req.file) {
+            profileImage = await uploadToCloudinary(req.file, "profile-images")
+        }
 
         const user = await User.findById(req.user.id)
         if (!user) {
