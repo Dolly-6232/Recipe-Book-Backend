@@ -84,6 +84,7 @@ export const updateProfile = async (req, res) => {
         let profileImage = undefined;
         if (req.file) {
             profileImage = await uploadToCloudinary(req.file, "profile-images");
+            console.log("Cloudinary upload successful:", profileImage);
         }
         const user = await User.findById(req.user.id);
         if (!user) {

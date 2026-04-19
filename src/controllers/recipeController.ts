@@ -4,6 +4,7 @@ import User from "../models/User.js"
 import { uploadToCloudinary } from "../utills/cloudinaryUpload.js"
 
 export const createRecipe = async (req: any, res: any) => {
+    console.log("=== CREATE RECIPE CALLED - NEW CODE ===")
     try {
         console.log("Request body:", req.body)
         console.log("Uploaded file:", req.file)
@@ -17,8 +18,17 @@ export const createRecipe = async (req: any, res: any) => {
 
         let imageUrl = null
         if (req.file) {
+            console.log("File details:", {
+                originalname: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size,
+                hasBuffer: !!req.file.buffer,
+                hasPath: !!req.file.path
+            })
             imageUrl = await uploadToCloudinary(req.file, "recipe-images")
             console.log("Cloudinary upload successful:", imageUrl)
+        } else {
+            console.log("No file in request")
         }
 
         const recipe = await Recipe.create({
